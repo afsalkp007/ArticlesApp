@@ -8,18 +8,24 @@
 import XCTest
 
 class HTTPClient {
-  var requredURLs = [URL]()
+  var requestedURLs = [URL]()
+  
+  func get(from url: URL) {
+    requestedURLs.append(url)
+  }
 }
 
 class RemoteArticlesLoader {
+  let url: URL
   let client: HTTPClient
   
-  init(client: HTTPClient) {
+  init(url: URL = URL(string: "a-url.com")!, client: HTTPClient) {
+    self.url = url
     self.client = client
   }
   
   func load() {
-    
+    client.get(from: url)
   }
 }
 
@@ -29,6 +35,16 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let client = HTTPClient()
     _ = RemoteArticlesLoader(client: client)
     
-    XCTAssertTrue(client.requredURLs.isEmpty)
+    XCTAssertTrue(client.requestedURLs.isEmpty)
+  }
+  
+  func test_init_requestsURLONLoad() {
+    let url = URL(string: "a-url.com")!
+    let client = HTTPClient()
+    let sut = RemoteArticlesLoader(url: url, client: client)
+    
+    sut.load()
+    
+    XCTAssertEqual(client.requestedURLs, [url])
   }
 }
