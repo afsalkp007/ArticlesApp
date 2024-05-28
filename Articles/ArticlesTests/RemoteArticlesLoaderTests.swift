@@ -31,15 +31,15 @@ class RemoteArticlesLoader {
 
 class RemoteArticlesLoaderTests: XCTestCase {
   
-  func test_init_doesNotRequestURL() {
+  func test_init_doesNotRequestsURL() {
     let client = HTTPClient()
     _ = RemoteArticlesLoader(client: client)
     
     XCTAssertTrue(client.requestedURLs.isEmpty)
   }
   
-  func test_init_requestsURLONLoad() {
-    let url = URL(string: "a-url.com")!
+  func test_init_requestsOnLoad() {
+    let url = URL(string: "a-given-url.com")!
     let client = HTTPClient()
     let sut = RemoteArticlesLoader(url: url, client: client)
     
