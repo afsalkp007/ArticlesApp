@@ -30,7 +30,7 @@ public class RemoteArticlesLoader {
     self.client = client
   }
   
-  public func load(completion: @escaping (Error) -> Void = { _ in }) {
+  public func load(completion: @escaping (Error) -> Void) {
     client.get(from: url) { result in
       switch result {
       case .success:
