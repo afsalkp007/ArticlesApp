@@ -11,6 +11,7 @@
 		F455FDBA2C05F647005C2E2A /* ArticleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F455FDB92C05F647005C2E2A /* ArticleItem.swift */; };
 		F455FDBC2C05F859005C2E2A /* ArticleLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F455FDBB2C05F859005C2E2A /* ArticleLoader.swift */; };
 		F455FDBF2C05F9E1005C2E2A /* RemoteArticlesLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F455FDBE2C05F9E1005C2E2A /* RemoteArticlesLoaderTests.swift */; };
+		F455FDC32C060171005C2E2A /* RemoteArticlesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F455FDC22C060171005C2E2A /* RemoteArticlesLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +31,7 @@
 		F455FDBB2C05F859005C2E2A /* ArticleLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleLoader.swift; sourceTree = "<group>"; };
 		F455FDBE2C05F9E1005C2E2A /* RemoteArticlesLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteArticlesLoaderTests.swift; sourceTree = "<group>"; };
 		F455FDC02C05FA21005C2E2A /* Articles.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Articles.xctestplan; sourceTree = "<group>"; };
+		F455FDC22C060171005C2E2A /* RemoteArticlesLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteArticlesLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		F455FDA32C05F46C005C2E2A /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				F455FDC12C060164005C2E2A /* Articles API */,
 				F455FDBD2C05F8F2005C2E2A /* Articles Feature */,
 			);
 			path = Articles;
@@ -93,6 +96,14 @@
 				F455FDBB2C05F859005C2E2A /* ArticleLoader.swift */,
 			);
 			path = "Articles Feature";
+			sourceTree = "<group>";
+		};
+		F455FDC12C060164005C2E2A /* Articles API */ = {
+			isa = PBXGroup;
+			children = (
+				F455FDC22C060171005C2E2A /* RemoteArticlesLoader.swift */,
+			);
+			path = "Articles API";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F455FDBA2C05F647005C2E2A /* ArticleItem.swift in Sources */,
+				F455FDC32C060171005C2E2A /* RemoteArticlesLoader.swift in Sources */,
 				F455FDBC2C05F859005C2E2A /* ArticleLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
