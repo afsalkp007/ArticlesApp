@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "D7E33ADD-D30D-44E1-8160-2D58437BE791",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Articles.xcodeproj",
+        "identifier" : "F455FDAE2C05F4F5005C2E2A",
+        "name" : "ArticlesTests"
+      }
+    }
+  ],
+  "version" : 1
+}
