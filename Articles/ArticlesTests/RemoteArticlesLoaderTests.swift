@@ -28,16 +28,14 @@ class RemoteArticlesLoader {
 class RemoteArticlesLoaderTests: XCTestCase {
   
   func test_init_doesNotRequestsURL() {
-    let client = HTTPClientSpy()
-    _ = RemoteArticlesLoader(client: client)
+    let (_, client) = makeSUT()
     
     XCTAssertTrue(client.requestedURLs.isEmpty)
   }
   
   func test_init_requestsOnLoad() {
     let url = URL(string: "a-given-url.com")!
-    let client = HTTPClientSpy()
-    let sut = RemoteArticlesLoader(url: url, client: client)
+    let (sut, client) = makeSUT(url: url)
     
     sut.load()
     
@@ -45,6 +43,12 @@ class RemoteArticlesLoaderTests: XCTestCase {
   }
   
   // MARK: - Helpers
+  
+  private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteArticlesLoader, client: HTTPClientSpy) {
+    let client = HTTPClientSpy()
+    let sut = RemoteArticlesLoader(url: url, client: client)
+    return (sut, client)
+  }
   
   private class HTTPClientSpy: HTTPClient {
     var requestedURLs = [URL]()
