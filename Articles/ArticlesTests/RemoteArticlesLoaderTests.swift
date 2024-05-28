@@ -25,6 +25,16 @@ class RemoteArticlesLoaderTests: XCTestCase {
     XCTAssertEqual(client.requestedURLs, [url])
   }
   
+  func test_load_deliversErrorOnClientError() {
+    let (sut, client) = makeSUT()
+    client.error = NSError(domain: "Test", code: 0)
+    
+    var receivedErrors = [RemoteArticlesLoader.Error]()
+    sut.load { receivedErrors.append($0) }
+    
+    XCTAssertEqual(receivedErrors, [.connectivity])
+  }
+  
   // MARK: - Helpers
   
   private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteArticlesLoader, client: HTTPClientSpy) {
@@ -35,8 +45,12 @@ class RemoteArticlesLoaderTests: XCTestCase {
   
   private class HTTPClientSpy: HTTPClient {
     var requestedURLs = [URL]()
+    var error: Error?
 
-    func get(from url: URL) {
+    func get(from url: URL, completion: @escaping (Error) -> Void) {
+      if let error = error {
+        completion(error)
+      }
       requestedURLs.append(url)
     }
   }
