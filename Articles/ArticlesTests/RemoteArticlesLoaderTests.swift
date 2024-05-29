@@ -38,7 +38,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
   func test_load_deliversErrorOnClientError() {
     let (sut, client) = makeSUT()
     
-    expect(sut, toExpectError: .connectivity, when: {
+    expect(sut, toExpectError: .failure(.connectivity), when: {
       let clientError = NSError(domain: "Test", code: 0)
       client.complete(with: clientError)
     })
@@ -48,7 +48,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let (sut, client) = makeSUT()
         
     [199, 201, 300, 400, 500].enumerated().forEach { index, code in
-      expect(sut, toExpectError: .invalidData, when: {
+      expect(sut, toExpectError: .failure(.invalidData), when: {
         client.complete(withStatusCode: code, at: index)
       })
     }
@@ -57,9 +57,18 @@ class RemoteArticlesLoaderTests: XCTestCase {
   func test_load_deliversErrorOn200HTTPRespnseWithInvalidJSON() {
     let (sut, client) = makeSUT()
     
-    expect(sut, toExpectError: .invalidData, when: {
+    expect(sut, toExpectError: .failure(.invalidData), when: {
       let invalidJSON = Data("invalid json".utf8)
       client.complete(withStatusCode: 200, data: invalidJSON)
+    })
+  }
+  
+  func test_load_deliversEmptyListOn200HTTPRespnseWithEmptyJSON() {
+    let (sut, client) = makeSUT()
+    
+    expect(sut, toExpectError: .success([]), when: {
+      let emptyJSON = Data("{\"results\": []}".utf8)
+      client.complete(withStatusCode: 200, data: emptyJSON)
     })
   }
   
@@ -71,13 +80,13 @@ class RemoteArticlesLoaderTests: XCTestCase {
     return (sut, client)
   }
   
-  private func expect(_ sut: RemoteArticlesLoader, toExpectError error: RemoteArticlesLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-    var receivedErrors = [RemoteArticlesLoader.Error]()
-    sut.load { receivedErrors.append($0) }
+  private func expect(_ sut: RemoteArticlesLoader, toExpectError error: RemoteArticlesLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    var receivedResults = [RemoteArticlesLoader.Result]()
+    sut.load { receivedResults.append($0) }
 
     action()
     
-    XCTAssertEqual(receivedErrors, [error], file: file, line: line)
+    XCTAssertEqual(receivedResults, [error], file: file, line: line)
   }
   
   private class HTTPClientSpy: HTTPClient {
@@ -101,7 +110,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
         statusCode: code,
         httpVersion: nil,
         headerFields: nil)!
-      completions[index].completion(.success(response))
+      completions[index].completion(.success(data, response))
     }
   }
 }

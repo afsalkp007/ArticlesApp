@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ArticleItem {
+public struct ArticleItem: Equatable {
   let title: String
   let byline: String
   let date: Date
