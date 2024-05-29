@@ -64,6 +64,10 @@ private class ArticleItemsMapper {
   
   private struct Root: Decodable {
     let results: [Item]
+    
+    var articles: [ArticleItem] {
+      return results.map(\.article)
+    }
   }
 
   private struct Item: Decodable {
@@ -106,7 +110,7 @@ private class ArticleItemsMapper {
     let decoder = JSONDecoder()
     decoder.dateDecodingStrategy = .formatted(Self.formatter)
     let root = try decoder.decode(Root.self, from: data)
-    return root.results.map(\.article)
+    return root.articles
   }
 }
 
