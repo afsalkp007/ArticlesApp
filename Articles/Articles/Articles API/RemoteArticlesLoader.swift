@@ -30,7 +30,7 @@ public class RemoteArticlesLoader {
     case invalidData
   }
   
-  public init(url: URL = URL(string: "a-url.com")!, client: HTTPClient) {
+  public init(url: URL, client: HTTPClient) {
     self.url = url
     self.client = client
   }
@@ -57,10 +57,43 @@ private class ArticleItemsMapper {
   static var formatter: DateFormatter {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
-    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
     dateFormatter.dateStyle = .medium
     dateFormatter.timeZone = .none
     return dateFormatter
+  }
+  
+  private struct Root: Decodable {
+    let results: [Item]
+  }
+
+  private struct Item: Decodable {
+    let title: String
+    let byline: String
+    let date: Date
+    let media: [Media]
+    
+    var article: ArticleItem {
+      return ArticleItem(title: title, byline: byline, date: date, imageURL: media.first?.mediaMetadata.first?.url)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+      case title
+      case byline
+      case date = "published_date"
+      case media
+    }
+  }
+
+  private struct Media: Decodable {
+    let mediaMetadata: [MediaMetaData]
+    
+    private enum CodingKeys: String, CodingKey {
+      case mediaMetadata = "media-metadata"
+    }
+  }
+
+  private struct MediaMetaData: Decodable {
+    let url: URL
   }
   
   private static var OK_200: Int { return 200 }
@@ -75,39 +108,5 @@ private class ArticleItemsMapper {
     let root = try decoder.decode(Root.self, from: data)
     return root.results.map(\.article)
   }
-}
-
-private struct Root: Decodable {
-  let results: [Item]
-}
-
-private struct Item: Decodable {
-  let title: String
-  let byline: String
-  let date: Date
-  let media: [Media]
-  
-  var article: ArticleItem {
-    return ArticleItem(title: title, byline: byline, date: date, imageURL: media.first?.mediaMetadata.first?.url)
-  }
-  
-  private enum CodingKeys: String, CodingKey {
-    case title
-    case byline
-    case date = "published_date"
-    case media
-  }
-}
-
-private struct Media: Decodable {
-  let mediaMetadata: [MediaMetaData]
-  
-  private enum CodingKeys: String, CodingKey {
-    case mediaMetadata = "media-metadata"
-  }
-}
-
-private struct MediaMetaData: Decodable {
-  let url: URL
 }
 
