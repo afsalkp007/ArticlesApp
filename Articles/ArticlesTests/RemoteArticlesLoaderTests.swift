@@ -49,7 +49,8 @@ class RemoteArticlesLoaderTests: XCTestCase {
         
     [199, 201, 300, 400, 500].enumerated().forEach { index, code in
       expect(sut, toExpectError: .failure(.invalidData), when: {
-        client.complete(withStatusCode: code, at: index)
+        let emptyJSON = Data("{\"results\": []}".utf8)
+        client.complete(withStatusCode: code, data: emptyJSON, at: index)
       })
     }
   }
@@ -87,11 +88,10 @@ class RemoteArticlesLoaderTests: XCTestCase {
       date: (Date(timeIntervalSince1970: 1707768000), "13 Feb 2024"),
       imageURL: URL(string: "http://another-url.com")!)
 
-    let itemsJSON = ["results": [item1.json, item2.json]]
     let items = [item1.model, item2.model]
     
     expect(sut, toExpectError: .success(items), when: {
-      let json = try! JSONSerialization.data(withJSONObject: itemsJSON)
+      let json = makeItemJSON([item1.json, item2.json])
       client.complete(withStatusCode: 200, data: json)
     })
   }
@@ -123,6 +123,11 @@ class RemoteArticlesLoaderTests: XCTestCase {
     return (item, json)
   }
   
+  private func makeItemJSON(_ items: [[String : Any]]) -> Data {
+    let json = ["results": items]
+    return try! JSONSerialization.data(withJSONObject: json)
+  }
+  
   private func expect(_ sut: RemoteArticlesLoader, toExpectError error: RemoteArticlesLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
     var receivedResults = [RemoteArticlesLoader.Result]()
     sut.load { receivedResults.append($0) }
@@ -147,7 +152,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
       completions[index].completion(.failure(error))
     }
     
-    func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
+    func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
       let response = HTTPURLResponse(
         url: requestedURLs[index],
         statusCode: code,
