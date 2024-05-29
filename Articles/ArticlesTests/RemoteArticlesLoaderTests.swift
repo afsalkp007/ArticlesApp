@@ -38,26 +38,29 @@ class RemoteArticlesLoaderTests: XCTestCase {
   func test_load_deliversErrorOnClientError() {
     let (sut, client) = makeSUT()
     
-    var receivedErrors = [RemoteArticlesLoader.Error]()
-    sut.load { receivedErrors.append($0) }
-    
-    let clientError = NSError(domain: "Test", code: 0)
-    client.complete(with: clientError)
-    
-    XCTAssertEqual(receivedErrors, [.connectivity])
+    expect(sut, toExpectError: .connectivity, when: {
+      let clientError = NSError(domain: "Test", code: 0)
+      client.complete(with: clientError)
+    })
   }
   
-  func test_load_deliversErrorOnInvalidData() {
+  func test_load_deliversErrorOnInvalidDataOnNon200HTTPResponse() {
     let (sut, client) = makeSUT()
         
     [199, 201, 300, 400, 500].enumerated().forEach { index, code in
-      var receivedErrors = [RemoteArticlesLoader.Error]()
-      sut.load { receivedErrors.append($0) }
-
-      client.complete(withStatusCode: code, at: index)
-      
-      XCTAssertEqual(receivedErrors, [.invalidData])
+      expect(sut, toExpectError: .invalidData, when: {
+        client.complete(withStatusCode: code, at: index)
+      })
     }
+  }
+  
+  func test_load_deliversErrorOn200HTTPRespnseWithInvalidJSON() {
+    let (sut, client) = makeSUT()
+    
+    expect(sut, toExpectError: .invalidData, when: {
+      let invalidJSON = Data("invalid json".utf8)
+      client.complete(withStatusCode: 200, data: invalidJSON)
+    })
   }
   
   // MARK: - Helpers
@@ -66,6 +69,15 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let client = HTTPClientSpy()
     let sut = RemoteArticlesLoader(url: url, client: client)
     return (sut, client)
+  }
+  
+  private func expect(_ sut: RemoteArticlesLoader, toExpectError error: RemoteArticlesLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    var receivedErrors = [RemoteArticlesLoader.Error]()
+    sut.load { receivedErrors.append($0) }
+
+    action()
+    
+    XCTAssertEqual(receivedErrors, [error], file: file, line: line)
   }
   
   private class HTTPClientSpy: HTTPClient {
@@ -83,7 +95,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
       completions[index].completion(.failure(error))
     }
     
-    func complete(withStatusCode code: Int, at index: Int = 0) {
+    func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
       let response = HTTPURLResponse(
         url: requestedURLs[index],
         statusCode: code,
