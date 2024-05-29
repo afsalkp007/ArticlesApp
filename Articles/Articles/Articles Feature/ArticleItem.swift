@@ -8,8 +8,15 @@
 import Foundation
 
 public struct ArticleItem: Equatable {
-  let title: String
-  let byline: String
-  let date: Date
-  let imageURL: URL
+  public let title: String
+  public let byline: String
+  public let date: Date
+  public let imageURL: URL?
+  
+  public init(title: String, byline: String, date: Date, imageURL: URL?) {
+    self.title = title
+    self.byline = byline
+    self.date = date
+    self.imageURL = imageURL
+  }
 }

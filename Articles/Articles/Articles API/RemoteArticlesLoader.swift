@@ -35,13 +35,26 @@ public class RemoteArticlesLoader {
     self.client = client
   }
   
+  public static var formatter: DateFormatter {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    dateFormatter.dateStyle = .medium
+    dateFormatter.timeZone = .none
+    return dateFormatter
+  }
+  
   public func load(completion: @escaping (Result) -> Void) {
     client.get(from: url) { result in
       switch result {
       case let .success(data, _):
-        if let _ = try? JSONSerialization.jsonObject(with: data) {
-          completion(.success([]))
-        } else {
+        do {
+          let decoder = JSONDecoder()
+          decoder.dateDecodingStrategy = .formatted(Self.formatter)
+          
+         let root = try decoder.decode(Root.self, from: data)
+          completion(.success(root.results.map(\.article)))
+        } catch {
           completion(.failure(.invalidData))
         }
         
@@ -51,3 +64,38 @@ public class RemoteArticlesLoader {
     }
   }
 }
+
+private struct Root: Decodable {
+  let results: [Item]
+}
+
+private struct Item: Decodable {
+  let title: String
+  let byline: String
+  let date: Date
+  let media: [Media]
+  
+  var article: ArticleItem {
+    return ArticleItem(title: title, byline: byline, date: date, imageURL: media.first?.mediaMetadata.first?.url)
+  }
+  
+  private enum CodingKeys: String, CodingKey {
+    case title
+    case byline
+    case date = "published_date"
+    case media
+  }
+}
+
+private struct Media: Decodable {
+  let mediaMetadata: [MediaMetaData]
+  
+  private enum CodingKeys: String, CodingKey {
+    case mediaMetadata = "media-metadata"
+  }
+}
+
+private struct MediaMetaData: Decodable {
+  let url: URL
+}
+

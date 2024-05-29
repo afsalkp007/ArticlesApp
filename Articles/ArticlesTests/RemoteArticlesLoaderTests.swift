@@ -72,12 +72,55 @@ class RemoteArticlesLoaderTests: XCTestCase {
     })
   }
   
+  func test_load_deliversItemsOn200HTTPRespnseWithItemsJSON() {
+    let (sut, client) = makeSUT()
+    
+    let item1 = makeItem(
+      title: "a title",
+      byline: "a name",
+      date: (Date(timeIntervalSince1970: 1716667200), "26 May 2024"),
+      imageURL: URL(string: "http://a-url.com")!)
+    
+    let item2 = makeItem(
+      title: "another title",
+      byline: "another name",
+      date: (Date(timeIntervalSince1970: 1707768000), "13 Feb 2024"),
+      imageURL: URL(string: "http://another-url.com")!)
+
+    let itemsJSON = ["results": [item1.json, item2.json]]
+    let items = [item1.model, item2.model]
+    
+    expect(sut, toExpectError: .success(items), when: {
+      let json = try! JSONSerialization.data(withJSONObject: itemsJSON)
+      client.complete(withStatusCode: 200, data: json)
+    })
+  }
+  
   // MARK: - Helpers
   
   private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteArticlesLoader, client: HTTPClientSpy) {
     let client = HTTPClientSpy()
     let sut = RemoteArticlesLoader(url: url, client: client)
     return (sut, client)
+  }
+  
+  private func makeItem(title: String, byline: String, date: (date: Date, formatted: String), imageURL: URL) -> (model: ArticleItem, json: [String: Any]) {
+    let item = ArticleItem(
+      title: title,
+      byline: byline,
+      date: date.date,
+      imageURL: imageURL)
+    
+    let json: [String: Any] = [
+      "title": item.title,
+      "byline": item.byline,
+      "published_date": date.formatted,
+      "media": [
+        ["media-metadata": [["url": item.imageURL?.absoluteString]]]
+      ]
+    ]
+    
+    return (item, json)
   }
   
   private func expect(_ sut: RemoteArticlesLoader, toExpectError error: RemoteArticlesLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
