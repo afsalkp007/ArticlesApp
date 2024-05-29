@@ -34,8 +34,27 @@ public class RemoteArticlesLoader {
     self.url = url
     self.client = client
   }
-  
-  public static var formatter: DateFormatter {
+    
+  public func load(completion: @escaping (Result) -> Void) {
+    client.get(from: url) { result in
+      switch result {
+      case let .success(data, response):
+        do {
+          let articles = try ArticleItemsMapper.map(data, response)
+          completion(.success(articles))
+        } catch {
+          completion(.failure(.invalidData))
+        }
+        
+      case .failure:
+        completion(.failure(.connectivity))
+      }
+    }
+  }
+}
+
+private class ArticleItemsMapper {
+  static var formatter: DateFormatter {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -44,23 +63,17 @@ public class RemoteArticlesLoader {
     return dateFormatter
   }
   
-  public func load(completion: @escaping (Result) -> Void) {
-    client.get(from: url) { result in
-      switch result {
-      case let .success(data, response):
-          let decoder = JSONDecoder()
-          decoder.dateDecodingStrategy = .formatted(Self.formatter)
-          
-        if response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) {
-          completion(.success(root.results.map(\.article)))
-        } else {
-          completion(.failure(.invalidData))
-        }
-        
-      case .failure:
-        completion(.failure(.connectivity))
-      }
+  private static var OK_200: Int { return 200 }
+
+  static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [ArticleItem] {
+    guard response.statusCode == OK_200 else {
+      throw RemoteArticlesLoader.Error.invalidData
     }
+    
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .formatted(Self.formatter)
+    let root = try decoder.decode(Root.self, from: data)
+    return root.results.map(\.article)
   }
 }
 

@@ -115,9 +115,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
       "title": item.title,
       "byline": item.byline,
       "published_date": date.formatted,
-      "media": [
-        ["media-metadata": [["url": item.imageURL?.absoluteString]]]
-      ]
+      "media": [["media-metadata": [["url": item.imageURL?.absoluteString]]]]
     ]
     
     return (item, json)
