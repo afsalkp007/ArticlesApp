@@ -98,10 +98,18 @@ class RemoteArticlesLoaderTests: XCTestCase {
   
   // MARK: - Helpers
   
-  private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteArticlesLoader, client: HTTPClientSpy) {
+  private func makeSUT(url: URL = URL(string: "a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteArticlesLoader, client: HTTPClientSpy) {
     let client = HTTPClientSpy()
     let sut = RemoteArticlesLoader(url: url, client: client)
+    trackForMemoryLeak(sut, file: file, line: line)
+    trackForMemoryLeak(client, file: file, line: line)
     return (sut, client)
+  }
+  
+  private func trackForMemoryLeak(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+    addTeardownBlock { [weak instance] in
+      XCTAssertNil(instance, file: file, line: line)
+    }
   }
   
   private func makeItem(title: String, byline: String, date: (date: Date, formatted: String), imageURL: URL) -> (model: ArticleItem, json: [String: Any]) {
