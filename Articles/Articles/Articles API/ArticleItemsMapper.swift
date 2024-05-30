@@ -53,15 +53,17 @@ class ArticleItemsMapper {
   }
   
   private static var OK_200: Int { return 200 }
-
-  static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [ArticleItem] {
-    guard response.statusCode == OK_200 else {
-      throw RemoteArticlesLoader.Error.invalidData
-    }
-    
+  
+  static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteArticlesLoader.Result {
     let decoder = JSONDecoder()
     decoder.dateDecodingStrategy = .formatted(Self.formatter)
-    let root = try decoder.decode(Root.self, from: data)
-    return root.articles
+    
+    guard response.statusCode == OK_200,
+          let root = try? decoder.decode(Root.self, from: data) else {
+      return .failure(RemoteArticlesLoader.Error.invalidData)
+    }
+    
+    let articles = root.articles
+    return .success(articles)
   }
 }
