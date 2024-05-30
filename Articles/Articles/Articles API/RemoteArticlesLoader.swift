@@ -11,7 +11,7 @@ public class RemoteArticlesLoader {
   let url: URL
   let client: HTTPClient
   
-  public typealias Result = ArticleResult<Error>
+  public typealias Result = ArticleResult
   
   public enum Error: Swift.Error {
     case connectivity
@@ -32,7 +32,7 @@ public class RemoteArticlesLoader {
         completion(ArticleItemsMapper.map(data, response))
         
       case .failure:
-        completion(.failure(.connectivity))
+        completion(.failure(Error.connectivity))
       }
     }
   }

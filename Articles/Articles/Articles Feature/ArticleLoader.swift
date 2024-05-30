@@ -7,13 +7,11 @@
 
 import Foundation
 
-public enum ArticleResult<Error: Swift.Error> {
+public enum ArticleResult {
   case success([ArticleItem])
   case failure(Error)
 }
 
 protocol ArticleLoader {
-  associatedtype Error: Swift.Error
-  
-  func load(completion: (ArticleResult<Error>) -> Void)
+  func load(completion: (ArticleResult) -> Void)
 }

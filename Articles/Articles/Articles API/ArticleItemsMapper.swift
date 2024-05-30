@@ -60,7 +60,7 @@ class ArticleItemsMapper {
     
     guard response.statusCode == OK_200,
           let root = try? decoder.decode(Root.self, from: data) else {
-      return .failure(.invalidData)
+      return .failure(RemoteArticlesLoader.Error.invalidData)
     }
     
     let articles = root.articles
