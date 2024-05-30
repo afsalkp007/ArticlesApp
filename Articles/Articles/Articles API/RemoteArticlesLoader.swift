@@ -11,10 +11,7 @@ public class RemoteArticlesLoader {
   let url: URL
   let client: HTTPClient
   
-  public enum Result: Equatable {
-    case success([ArticleItem])
-    case failure(Error)
-  }
+  public typealias Result = ArticleResult<Error>
   
   public enum Error: Swift.Error {
     case connectivity
