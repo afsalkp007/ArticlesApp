@@ -12,8 +12,6 @@ public enum ArticleResult<Error: Swift.Error> {
   case failure(Error)
 }
 
-extension ArticleResult: Equatable where Error: Equatable {}
-
 protocol ArticleLoader {
   associatedtype Error: Swift.Error
   
