@@ -30,16 +30,20 @@ public class RemoteArticlesLoader {
     client.get(from: url) { result in
       switch result {
       case let .success(data, response):
-        do {
-          let articles = try ArticleItemsMapper.map(data, response)
-          completion(.success(articles))
-        } catch {
-          completion(.failure(.invalidData))
-        }
+        completion(Self.map(data, response))
         
       case .failure:
         completion(.failure(.connectivity))
       }
+    }
+  }
+  
+  private static func map(_ data: Data, _ response: HTTPURLResponse) -> Result {
+    do {
+      let articles = try ArticleItemsMapper.map(data, response)
+      return .success(articles)
+    } catch {
+      return .failure(.invalidData)
     }
   }
 }
