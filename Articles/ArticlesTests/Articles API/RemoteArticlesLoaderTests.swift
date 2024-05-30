@@ -38,7 +38,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
   func test_load_deliversErrorOnClientError() {
     let (sut, client) = makeSUT()
     
-    expect(sut, toExpectError: .failure(RemoteArticlesLoader.Error.connectivity), when: {
+    expect(sut, toExpectError: failure(.connectivity), when: {
       let clientError = NSError(domain: "Test", code: 0)
       client.complete(with: clientError)
     })
@@ -48,7 +48,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let (sut, client) = makeSUT()
         
     [199, 201, 300, 400, 500].enumerated().forEach { index, code in
-      expect(sut, toExpectError: .failure(RemoteArticlesLoader.Error.invalidData), when: {
+      expect(sut, toExpectError: failure(.invalidData), when: {
         let emptyJSON = Data("{\"results\": []}".utf8)
         client.complete(withStatusCode: code, data: emptyJSON, at: index)
       })
@@ -58,7 +58,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
   func test_load_deliversErrorOn200HTTPRespnseWithInvalidJSON() {
     let (sut, client) = makeSUT()
     
-    expect(sut, toExpectError: .failure(RemoteArticlesLoader.Error.invalidData), when: {
+    expect(sut, toExpectError: failure(.invalidData), when: {
       let invalidJSON = Data("invalid json".utf8)
       client.complete(withStatusCode: 200, data: invalidJSON)
     })
@@ -125,6 +125,10 @@ class RemoteArticlesLoaderTests: XCTestCase {
     addTeardownBlock { [weak instance] in
       XCTAssertNil(instance, file: file, line: line)
     }
+  }
+  
+  private func failure(_ error: RemoteArticlesLoader.Error) -> RemoteArticlesLoader.Result {
+    return .failure(error)
   }
   
   private func makeItem(title: String, byline: String, date: (date: Date, formatted: String), imageURL: URL) -> (model: ArticleItem, json: [String: Any]) {
