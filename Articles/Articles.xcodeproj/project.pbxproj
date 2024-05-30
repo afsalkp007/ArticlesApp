@@ -88,7 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				F455FDC02C05FA21005C2E2A /* Articles.xctestplan */,
-				F455FDBE2C05F9E1005C2E2A /* RemoteArticlesLoaderTests.swift */,
+				F455FDCF2C089ACC005C2E2A /* Articles API */,
 			);
 			path = ArticlesTests;
 			sourceTree = "<group>";
@@ -108,6 +108,14 @@
 				F455FDC22C060171005C2E2A /* RemoteArticlesLoader.swift */,
 				F455FDCD2C089620005C2E2A /* HTTPClient.swift */,
 				F455FDC62C0771A2005C2E2A /* ArticleItemsMapper.swift */,
+			);
+			path = "Articles API";
+			sourceTree = "<group>";
+		};
+		F455FDCF2C089ACC005C2E2A /* Articles API */ = {
+			isa = PBXGroup;
+			children = (
+				F455FDBE2C05F9E1005C2E2A /* RemoteArticlesLoaderTests.swift */,
 			);
 			path = "Articles API";
 			sourceTree = "<group>";
