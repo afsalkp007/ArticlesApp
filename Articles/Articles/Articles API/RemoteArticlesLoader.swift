@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class RemoteArticlesLoader {
+public class RemoteArticlesLoader: ArticleLoader {
   let url: URL
   let client: HTTPClient
   

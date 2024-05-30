@@ -13,5 +13,5 @@ public enum ArticleResult {
 }
 
 protocol ArticleLoader {
-  func load(completion: (ArticleResult) -> Void)
+  func load(completion: @escaping (ArticleResult) -> Void)
 }
