@@ -121,12 +121,6 @@ class RemoteArticlesLoaderTests: XCTestCase {
     return (sut, client)
   }
   
-  private func trackForMemoryLeak(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-    addTeardownBlock { [weak instance] in
-      XCTAssertNil(instance, file: file, line: line)
-    }
-  }
-  
   private func failure(_ error: RemoteArticlesLoader.Error) -> RemoteArticlesLoader.Result {
     return .failure(error)
   }
