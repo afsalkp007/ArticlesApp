@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ArticleItemsMapper {
+public class ArticleItemsMapper {
   private struct Root: Decodable {
     let results: [Item]
     
@@ -50,11 +50,7 @@ class ArticleItemsMapper {
   
   static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteArticlesLoader.Result {
     let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .formatted({
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy-MM-dd"
-      return formatter
-    }())
+    decoder.dateDecodingStrategy = .formatted(getFormatter())
     
     guard response.statusCode == OK_200,
           let root = try? decoder.decode(Root.self, from: data) else {
@@ -63,5 +59,15 @@ class ArticleItemsMapper {
     
     let articles = root.articles
     return .success(articles)
+  }
+  
+  private static func getFormatter() -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter
+  }
+  
+  public static func getFormattedDate(_ string: String) -> Date? {
+    return getFormatter().date(from: string)
   }
 }

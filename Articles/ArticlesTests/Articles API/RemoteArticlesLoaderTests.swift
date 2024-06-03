@@ -79,13 +79,13 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let item1 = makeItem(
       title: "a title",
       byline: "a name",
-      date: (Date(timeIntervalSince1970: 1716667200), "26 May 2024"),
+      date: (Date(timeIntervalSince1970: 1716667200), "2024-05-26"),
       imageURL: URL(string: "http://a-url.com")!)
     
     let item2 = makeItem(
       title: "another title",
       byline: "another name",
-      date: (Date(timeIntervalSince1970: 1707768000), "13 Feb 2024"),
+      date: (Date(timeIntervalSince1970: 1707768000), "2024-02-13"),
       imageURL: URL(string: "http://another-url.com")!)
 
     let items = [item1.model, item2.model]
@@ -159,7 +159,7 @@ class RemoteArticlesLoaderTests: XCTestCase {
         XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 
       default:
-        XCTFail("Expected result \(expectedResult), got \(receivedResult) instead.")
+        XCTFail("Expected result \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
       }
       
       exp.fulfill()

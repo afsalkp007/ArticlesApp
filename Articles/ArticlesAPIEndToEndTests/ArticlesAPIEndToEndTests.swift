@@ -28,7 +28,7 @@ class ArticlesAPIEndToEndTests: XCTestCase {
   // MARK: - Helpers
   
   private func getArticlesResult(file: StaticString = #filePath, line: UInt = #line) -> ArticleResult? {
-    let url = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/7.json?api-key=gGc5U7GM2xeyNgFlxJxf3qb0x8AfqLe5")!
+    let url = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/30.json?api-key=gGc5U7GM2xeyNgFlxJxf3qb0x8AfqLe5")!
     let client = URLSessionHTTPClient()
     let loader = RemoteArticlesLoader(url: url, client: client)
     trackForMemoryLeak(client, file: file, line: line)
@@ -51,31 +51,29 @@ class ArticlesAPIEndToEndTests: XCTestCase {
   
   private func title(at index: Int) -> String {
     return [
-      "Should You Delay Your Morning Caffeine?",
-      "Trump’s Guilty Verdict May Be a Political Accelerant"
+      "A Shock of Red for a Royal Portrait",
+      "These Couples Survived a Lot. Then Came Retirement."
     ][index]
   }
   
   private func byline(at index: Int) -> String {
     return [
-      "By Alice Callahan",
-      "By Frank Bruni"
+      "By Vanessa Friedman",
+      "By Susan Dominus"
     ][index]
   }
   
   private func date(at index: Int) -> Date {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd"
-    return dateFormatter.date(from: [
-      "2024-05-29",
-      "2024-05-30"
+    return ArticleItemsMapper.getFormattedDate([
+      "2024-05-15",
+      "2024-05-05"
     ][index])!
   }
   
   private func imageURL(at index: Int) -> URL {
     return URL(string: [
-      "https://static01.nyt.com/images/2024/06/04/multimedia/29ASKWELL-COFFEE-TIMING1-vpjc/29ASKWELL-COFFEE-TIMING1-vpjc-thumbStandard.jpg",
-      "https://static01.nyt.com/images/2024/06/02/multimedia/31bruni2-hvpq/31bruni2-hvpq-thumbStandard.jpg"
+      "https://static01.nyt.com/images/2024/05/15/multimedia/15CHARLES-RED-lgvw/15CHARLES-RED-lgvw-thumbStandard.jpg",
+      "https://static01.nyt.com/images/2024/05/12/magazine/12mag-couples/12mag-couples-thumbStandard.jpg"
     ][index])!
   }
 }

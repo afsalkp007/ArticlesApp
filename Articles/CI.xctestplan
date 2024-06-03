@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "id" : "3FC84F11-4409-4DF2-818A-83C0A16606D9",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Articles.xcodeproj",
+          "identifier" : "F455FDA02C05F46C005C2E2A",
+          "name" : "Articles"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Articles.xcodeproj",
+        "identifier" : "F455FDF52C0DDE9D005C2E2A",
+        "name" : "ArticlesAPIEndToEndTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Articles.xcodeproj",
+        "identifier" : "F455FDAE2C05F4F5005C2E2A",
+        "name" : "ArticlesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

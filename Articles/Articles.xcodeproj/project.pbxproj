@@ -55,6 +55,7 @@
 		F455FDF62C0DDE9D005C2E2A /* ArticlesAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArticlesAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F455FDF82C0DDE9D005C2E2A /* ArticlesAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		F455FE002C0DDEBA005C2E2A /* ArticlesAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ArticlesAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
+		F455FE022C0DE817005C2E2A /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +88,7 @@
 		F455FD972C05F46C005C2E2A = {
 			isa = PBXGroup;
 			children = (
+				F455FE022C0DE817005C2E2A /* CI.xctestplan */,
 				F455FDA32C05F46C005C2E2A /* Articles */,
 				F455FDB02C05F4F5005C2E2A /* ArticlesTests */,
 				F455FDF72C0DDE9D005C2E2A /* ArticlesAPIEndToEndTests */,
