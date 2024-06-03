@@ -79,13 +79,13 @@ class RemoteArticlesLoaderTests: XCTestCase {
     let item1 = makeItem(
       title: "a title",
       byline: "a name",
-      date: (Date(timeIntervalSince1970: 1716667200), "2024-05-26"),
+      date: "2024-05-26",
       imageURL: URL(string: "http://a-url.com")!)
     
     let item2 = makeItem(
       title: "another title",
       byline: "another name",
-      date: (Date(timeIntervalSince1970: 1707768000), "2024-02-13"),
+      date: "2024-02-13",
       imageURL: URL(string: "http://another-url.com")!)
 
     let items = [item1.model, item2.model]
@@ -125,17 +125,17 @@ class RemoteArticlesLoaderTests: XCTestCase {
     return .failure(error)
   }
   
-  private func makeItem(title: String, byline: String, date: (date: Date, formatted: String), imageURL: URL) -> (model: ArticleItem, json: [String: Any]) {
+  private func makeItem(title: String, byline: String, date: String, imageURL: URL) -> (model: ArticleItem, json: [String: Any]) {
     let item = ArticleItem(
       title: title,
       byline: byline,
-      date: date.date,
+      date: ArticleItemsMapper.getFormattedDate(date)!,
       imageURL: imageURL)
     
     let json: [String: Any] = [
       "title": item.title,
       "byline": item.byline,
-      "published_date": date.formatted,
+      "published_date": date,
       "media": [["media-metadata": [["url": item.imageURL?.absoluteString]]]]
     ]
     
