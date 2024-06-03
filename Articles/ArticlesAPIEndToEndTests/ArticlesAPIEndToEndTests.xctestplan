@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9774A132-62B2-4C16-8553-D621AF630287",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Articles.xcodeproj",
+        "identifier" : "F455FDF52C0DDE9D005C2E2A",
+        "name" : "ArticlesAPIEndToEndTests"
+      }
+    }
+  ],
+  "version" : 1
+}
