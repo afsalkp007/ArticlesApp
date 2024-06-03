@@ -27,10 +27,12 @@ class ArticlesAPIEndToEndTests: XCTestCase {
   
   // MARK: - Helpers
   
-  private func getArticlesResult() -> ArticleResult? {
+  private func getArticlesResult(file: StaticString = #filePath, line: UInt = #line) -> ArticleResult? {
     let url = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/7.json?api-key=gGc5U7GM2xeyNgFlxJxf3qb0x8AfqLe5")!
     let client = URLSessionHTTPClient()
     let loader = RemoteArticlesLoader(url: url, client: client)
+    trackForMemoryLeak(client, file: file, line: line)
+    trackForMemoryLeak(loader, file: file, line: line)
     
     let exp = expectation(description: "Wait for load completion")
     
