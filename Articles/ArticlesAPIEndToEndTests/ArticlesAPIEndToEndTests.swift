@@ -10,7 +10,24 @@ import Articles
 
 class ArticlesAPIEndToEndTests: XCTestCase {
   
-  func test() {
+  func test_loadArticlesDeliversArticlesData() {
+    switch getArticlesResult() {
+    case let .success(items)?:
+      XCTAssertEqual(items.count, 20)
+      XCTAssertEqual(items[0], expectedItem(at: 0))
+      XCTAssertEqual(items[1], expectedItem(at: 1))
+      
+    case let .failure(error)?:
+      XCTFail("Expected success, got \(error) instead.")
+      
+    default:
+      XCTFail("Expected success, got no result instead.")
+    }
+  }
+  
+  // MARK: - Helpers
+  
+  private func getArticlesResult() -> ArticleResult? {
     let url = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/7.json?api-key=gGc5U7GM2xeyNgFlxJxf3qb0x8AfqLe5")!
     let client = URLSessionHTTPClient()
     let loader = RemoteArticlesLoader(url: url, client: client)
@@ -23,22 +40,8 @@ class ArticlesAPIEndToEndTests: XCTestCase {
       exp.fulfill()
     }
     wait(for: [exp], timeout: 5.0)
-    
-    switch receivedResult {
-    case let .success(items)?:
-      XCTAssertEqual(items.count, 20)
-      XCTAssertEqual(items[0], expectedItem(at: 0))
-      XCTAssertEqual(items[1], expectedItem(at: 1))
-    
-    case let .failure(error)?:
-      XCTFail("Expected success, got \(error) instead.")
-      
-    default:
-      XCTFail("Expected success, got no result instead.")
-    }
+    return receivedResult
   }
-  
-  // MARK: - Helpers
   
   private func expectedItem(at index: Int) -> ArticleItem {
     ArticleItem(title: title(at: index), byline: byline(at: index), date: date(at: index), imageURL: imageURL(at: index))
