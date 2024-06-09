@@ -8,7 +8,7 @@
 import XCTest
 import Articles
 
-class RemoteArticlesLoaderTests: XCTestCase {
+class LoadArticlesFromRemoteUseCaseTests: XCTestCase {
   
   func test_init_doesNotRequestsURL() {
     let (_, client) = makeSUT()
