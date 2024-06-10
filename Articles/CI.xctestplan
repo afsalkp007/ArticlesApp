@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "D7E33ADD-D30D-44E1-8160-2D58437BE791",
+      "id" : "3FC84F11-4409-4DF2-818A-83C0A16606D9",
       "name" : "Configuration 1",
       "options" : {
 
@@ -21,6 +21,13 @@
     "testExecutionOrdering" : "random"
   },
   "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Articles.xcodeproj",
+        "identifier" : "F455FDF52C0DDE9D005C2E2A",
+        "name" : "ArticlesAPIEndToEndTests"
+      }
+    },
     {
       "target" : {
         "containerPath" : "container:Articles.xcodeproj",

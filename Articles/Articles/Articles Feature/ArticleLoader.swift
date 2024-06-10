@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum ArticleResult {
+public enum ArticleResult {
   case success([ArticleItem])
   case failure(Error)
 }
 
-protocol ArticleLoader {
-  func load(completion: (ArticleResult) -> Void)
+public protocol ArticleLoader {
+  func load(completion: @escaping (ArticleResult) -> Void)
 }
